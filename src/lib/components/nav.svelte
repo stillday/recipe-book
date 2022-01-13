@@ -9,4 +9,5 @@
 <nav>
     <a aria-current={'/' === $page.url.pathname ? 'page' : undefined} href="/">Home</a>
     <a aria-current={'/' === $page.url.pathname ? 'page' : undefined} href="/input/ingredientsInput">Zutaten eingabe</a>
+    <a aria-current={'/' === $page.url.pathname ? 'page' : undefined} href="/input/recipeInput">Rezept eingabe</a>
 </nav>
