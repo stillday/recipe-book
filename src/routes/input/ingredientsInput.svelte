@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
     import supabase from "$lib/db";
     import __layout from "../__layout.svelte";
 
     // add new ingredient
     let newIngredient;
-    let submit = false;
+    let dataPromise;
 
     async function sendData() {
         const { data, error } = await supabase
@@ -18,22 +18,30 @@
     }
 
     // view ingredient
+    dataPromise = getData();
+
     async function getData() {
-    const { data, error } = await supabase
-        .from('ingredient')
-        .select()
-    if (error) throw new Error(error.message)
-    
-    return data
+        const { data, error } = await supabase
+            .from('ingredient')
+            .select()
+        if (error) throw new Error(error.message)
+        
+        return data
     }
 
-    function handelSubmit(event) {
-        const formData = new FormData(event.target);
-        // const formDataObject = Object.fromEntries(formData);
-        // console.log(formData);
-        console.log(Object.fromEntries(formData.value));
-        // event.target.reset();
-        
+    async function handelSubmit(event:FormDataEvent) {
+        const form = event.target as HTMLFormElement;
+        const formData = new FormData(form);
+        // @ts-ignore
+        const formDataObject = Object.fromEntries(formData);
+        try {
+            await sendData()
+            dataPromise = getData();
+            form.reset();
+        }
+        catch(error) {
+            console.log(error);
+        }
     }
 </script>
 
@@ -42,19 +50,8 @@
     <button type="submit">Eintragen</button>
 </form>
 
-{#if submit}
-    {#await sendData()}
-        <p>Zutat wird gespeichert ...</p>
-    {:then data} 
-        <p>Zutat wurde gespeichert</p>
-     {:catch error}
-        <p>Etwas ist schief gegangen</p>
-        <pre>{ error }</pre>   
-    {/await}
-{/if}
-
 <h1>Zutaten liste</h1>
-{#await getData()}
+{#await dataPromise}
   <p>Fetching data...</p>
 {:then data}
   {#each data as ingredient}

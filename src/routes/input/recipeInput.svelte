@@ -5,5 +5,11 @@
     // add new recipe
     let newRecipeName;
     let newRecipeKitchen;
+    let newRecipeBook;
+    let newRecipePage;
+    let newRecipeIngredient;
+    let newIngredientAmount;
+    let newIngredientUnit;
+
     
 </script>
